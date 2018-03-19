@@ -8,12 +8,6 @@ from tensorflow.python import debug as tf_debug
 import evaluate
 import datetime
 
-#use dropout
-#use gradient clip
-# add momentum
-# penalize unk words
-# truncated BPTT
-
 def main(unused_arg):
     tf.logging.set_verbosity(tf.logging.INFO)
     train()
