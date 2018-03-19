@@ -1,0 +1,3 @@
+TRAIN = 0
+EVAL = 1
+PREDICT = 2
