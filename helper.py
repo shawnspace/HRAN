@@ -39,8 +39,6 @@ def load_glove_vectors(filename, vocab):
 def build_initial_embedding_matrix(vocab_dict, glove_dict, glove_vectors, embedding_dim):
     np.random.seed(11)
     initial_embeddings = np.random.normal(0.0, 0.01, size=(len(vocab_dict), embedding_dim), ).astype("float32")
-    initial_embeddings[0] = np.zeros(shape=[embedding_dim], dtype='float32')  # <unk> vector is 0
-    # initial_embeddings[1] = np.ones(shape=[embedding_dim],dtype='float32') # <\s> vector is 1
     for word, glove_word_idx in glove_dict.items():
         word_idx = vocab_dict.get(word)
         initial_embeddings[word_idx, :] = glove_vectors[glove_word_idx]
