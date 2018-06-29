@@ -3,8 +3,8 @@ from collections import namedtuple
 import os
 
 # Model Parameters
-tf.flags.DEFINE_string('word_embed_path','/qydata/xzhangax/my_project/data/persona_chat/my_vector.txt','path to word embedding')
-tf.flags.DEFINE_string('vocab_path','/qydata/xzhangax/my_project/data/persona_chat/rg_vocab.txt','vocab path')
+tf.flags.DEFINE_string('word_embed_path','./data/glove.txt','path to word embedding')
+tf.flags.DEFINE_string('vocab_path','./data/rg_vocab.txt','vocab path')
 tf.flags.DEFINE_integer('vocab_size',18423,'vocab size')
 tf.flags.DEFINE_integer("word_dim", 300, "Dimensionality of the embeddings")
 tf.flags.DEFINE_integer('word_rnn_num_units', 600, 'Num of rnn cells')
@@ -83,7 +83,7 @@ def create_hparam():
         shuffle_batch=FLAGS.shuffle_batch,
         summary_save_steps=FLAGS.summary_save_steps,
         lambda_l2=0.001,
-        clip_norm=1000000000000000,
+        clip_norm=10,
         word_embed_path=FLAGS.word_embed_path,
         vocab_path=FLAGS.vocab_path
     )
