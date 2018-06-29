@@ -5,7 +5,7 @@ import random
 max_sen_length = 25
 max_con_length = 20
 
-def load_vocabulary(vocab_path): #18423 word
+def load_vocabulary(vocab_path):
     vocabulary = {}
     with open(vocab_path, 'r') as f:
         for i,l in enumerate(f.readlines()):
@@ -17,7 +17,7 @@ def create_dataset():
 
     train_examples = []
     count = 0
-    with open('multi/train.txt') as f:
+    with open('./data/multi/dialog_train.txt') as f:
         for l in f.readlines():
             dialog = l.rstrip('\n').split('\t')
             assert len(dialog) % 2 == 0
@@ -30,7 +30,7 @@ def create_dataset():
                 if count % 10000 == 0:
                     print(count)
 
-    with open('multi/valid.txt') as f:
+    with open('./data/multi/dialog_valid.txt') as f:
         dialogs = [l.rstrip('\n').split('\t') for l in f.readlines()]
     assert len(dialogs) == 1000
     valid_dialogs = dialogs[0:500]
