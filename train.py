@@ -8,19 +8,14 @@ from tensorflow.python import debug as tf_debug
 import evaluate
 import datetime
 
-#use dropout
-#use gradient clip
-# add momentum
-# penalize unk words
-# truncated BPTT
 
 def main(unused_arg):
     tf.logging.set_verbosity(tf.logging.INFO)
     train()
 
 tf.flags.DEFINE_boolean('debug',False,'debug mode')
-tf.flags.DEFINE_string('model_dir','./model/persona_chat3','model dir')
-tf.flags.DEFINE_string('data_dir','/qydata/xzhangax/my_project/data/persona_chat/multi','data dir')
+tf.flags.DEFINE_string('model_dir','./model/persona_chat1','model dir')
+tf.flags.DEFINE_string('data_dir','./data/multi','data dir')
 FLAGS = tf.flags.FLAGS
 
 TRAIN_FILE = os.path.join(os.path.abspath(FLAGS.data_dir), 'train.tfrecords')
@@ -113,8 +108,6 @@ def train():
 def create_train_op(loss,lr,global_step,clip_norm):
     optimizer = tf.train.AdamOptimizer(learning_rate=lr)
     grad_var = optimizer.compute_gradients(loss)
-    # grad_var = [(tf.clip_by_value(grad, clip_value_min=-100, clip_value_max=clip_value_max), var) for grad, var in
-    #             grad_var]
     grad_var = [(tf.clip_by_norm(grad, clip_norm=clip_norm), var) for grad, var in grad_var]
     train_op = optimizer.apply_gradients(grads_and_vars=grad_var, global_step=global_step)
 
