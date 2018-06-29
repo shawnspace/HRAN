@@ -15,7 +15,8 @@ def evaluate(eval_file,model_dir,summary_dir,train_steps):
 
         ppl  = HRAN.impl(features=input_features,hp=hp,mode=modekeys.EVAL)
 
-        sess = tf.Session()
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=1.0)
+        sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
 
         saver = tf.train.Saver()
         checkpoint = saver_lib.latest_checkpoint(model_dir)
@@ -24,26 +25,24 @@ def evaluate(eval_file,model_dir,summary_dir,train_steps):
 
         coord = tf.train.Coordinator()
         threads = tf.train.start_queue_runners(sess=sess,coord=coord)
-        tf.logging.info('Begin evaluation at model {} on file {}'.format(checkpoint,eval_file))
+        tf.logging.info('Begin evaluation')
 
-        total_ppl = 0
-        eval_step = 0
+
         try:
+            total_ppl = 0
+            eval_step = 0
             while not coord.should_stop():
                 perplexity = sess.run(fetches=ppl)
                 total_ppl += perplexity
                 eval_step += 1
         except tf.errors.OutOfRangeError:
-            tf.logging.info('Finish evaluation')
+            avg_ppl = total_ppl / eval_step
+            tf.logging.info('Finish evaluation. The perplexity is {}'.format(avg_ppl))
+            write_to_summary(summary_dir, 'eval_ppl', avg_ppl, train_steps)
         finally:
             coord.request_stop()
         coord.join(threads)
 
-        avg_ppl = total_ppl/eval_step
-        #write_to_summary(output_dir=summary_dir,summary_tag='eval_bleu_score',summary_value=bleu_score,current_global_step=train_steps)
-        write_to_summary(output_dir=summary_dir,summary_tag='eval_ppl',summary_value=avg_ppl,current_global_step=train_steps)
-        tf.logging.info('eval ppl is {}'.format(avg_ppl))
-        #tf.logging.info('bleu score is {}'.format(bleu_score))
         return avg_ppl
 
 def write_to_summary(output_dir,summary_tag,summary_value,current_global_step):
