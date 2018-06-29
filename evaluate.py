@@ -58,7 +58,7 @@ def write_to_summary(output_dir,summary_tag,summary_value,current_global_step):
     summary_writer.flush()
 
 if __name__ == '__main__':
-    evaluate('./data/valid.tfrecords','./model/model3','./model/model3/summary/eval',1)
+    evaluate('./data/valid.tfrecords','./model/model1','./model/model1/summary/eval',1)
 
 
 
